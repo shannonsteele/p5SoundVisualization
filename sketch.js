@@ -1,8 +1,12 @@
 //let song;
+let data =[];
 let source = null;
 let fft = null;
 let level = null;
 let volhistory = [];
+let button;
+let Silence = 0.07;
+let listening = false;
 // function preload() {
 //   //song = loadSound('underwater.mp3');
 //   }
@@ -17,9 +21,11 @@ function setup() {
   source = new p5.AudioIn();
     // start the Audio Input.
  // By default, it does not .connect() (to the computer speakers)
-  source.start();
-  //song.pause();
+  button = createButton('record');
+  fill(255);
+  button.mousePressed(toggleRecord);
 
+  source.start();
   // // create a new Amplitude analyzer
 
   // Patch the input to an volume analyze
@@ -31,11 +37,23 @@ function setup() {
 
 }
 
+function toggleRecord(){
+  if (listening) {
+      source.stop();
+      listening = false;
+  }
+  else {
+    source.start();
+    listening = true;
+  }
+}
+
 function draw(){
   background(0);
   drawWaveForm();
   drawCircAmp();
   drawAmphistory();
+  recordData();
   // Get the overall volume (between 0 and 1.0)
   //var vol = analyzer.getLevel();
   // let vol = mic.getLevel();
@@ -106,6 +124,14 @@ function drawAmphistory(){
   if(volhistory.length > (innerWidth-50)){
     volhistory.splice(0,1);
     }
+  }
+}
+
+function recordData(){
+  let noise = level.getLevel();
+  if (noise > Silence) {
+    data.push(noise);
+    console.log(noise);
   }
 }
 
