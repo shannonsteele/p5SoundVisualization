@@ -1,8 +1,8 @@
 //let song;
-//let volhistory = [];
 let source = null;
 let fft = null;
-
+let level = null;
+let volhistory = [];
 // function preload() {
 //   //song = loadSound('underwater.mp3');
 //   }
@@ -21,20 +21,21 @@ function setup() {
   //song.pause();
 
   // // create a new Amplitude analyzer
-  //analyzer = new p5.Amplitude();
-  //
-  // // Patch the input to an volume analyzer
-  //analyzer.setInput(song);
-  fft = new p5.FFT();
+
+  // Patch the input to an volume analyze
+  fft = new p5.FFT(.8,1024);
   fft.setInput(source);
+
+  level = new p5.Amplitude();
+  level.setInput(source);
+
 }
 
 function draw(){
   background(0);
   drawWaveForm();
-  //if (getAudioContext().state !== 'running') {
-  //getAudioContext().resume();
-  //}
+  drawCircAmp();
+  drawAmphistory();
   // Get the overall volume (between 0 and 1.0)
   //var vol = analyzer.getLevel();
   // let vol = mic.getLevel();
@@ -70,11 +71,42 @@ function drawWaveForm() {
   // Create a for-loop to draw a the connecting points of the shape of the input sound
 	wave.forEach(function (amp, i) {
 		const x = i / wave.length * width
-		const y = map(wave[i], -1, 1, 0, height)
+		const y = map(wave[i], -1, 1, 0, (height/2))
 		vertex(x, y)
 	})
   // End the shape
   endShape()
+}
+
+function drawCircAmp(){
+    stroke(255)
+    let vol = level.getLevel();
+    noFill()
+    //beginShape()
+      var y = map(vol,0,1,(height/2)-50,0)
+      ellipse(width/2,height/2,y, y)
+    //endShape()
+}
+
+function drawAmphistory(){
+  var vol = source.getLevel();
+  volhistory.push(vol);
+  //console.log(volhistory);
+
+  stroke(255);
+  beginShape();
+  noFill();
+  push();
+  var y = map(vol,0,1,height,0)
+  for (var i = 0; i < volhistory.length; i++) { //  for(var i = 0; i<innerWidth i++){
+    var y = map(volhistory[i],0,1,height,0)
+    vertex(i,y);
+  endShape();
+
+  if(volhistory.length > (innerWidth-50)){
+    volhistory.splice(0,1);
+    }
+  }
 }
 
 // function keyPressed(e) {
