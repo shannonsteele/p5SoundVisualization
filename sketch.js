@@ -7,6 +7,11 @@ let volhistory = [];
 let button;
 let Silence = 0.07;
 let listening = false;
+let analyzed = true;
+let trans = false;
+let binOut = "";
+let total = 0.0;
+let noise = null;
 // function preload() {
 //   //song = loadSound('underwater.mp3');
 //   }
@@ -36,15 +41,21 @@ function setup() {
   level.setInput(source);
 
 }
-
 function toggleRecord(){
   if (listening) {
-      source.stop();
       listening = false;
+      print("false?"+listening)
+      source.stop();
+      if(canTrans()){ //************
+        print(getText());//************
+      } else {//************
+        print("Cannot be translated");//************
+      }
   }
   else {
-    source.start();
     listening = true;
+    print("true?"+listening)
+    source.start();
   }
 }
 
@@ -54,26 +65,6 @@ function draw(){
   drawCircAmp();
   drawAmphistory();
   recordData();
-  // Get the overall volume (between 0 and 1.0)
-  //var vol = analyzer.getLevel();
-  // let vol = mic.getLevel();
-  // //volhistory.push(vol);
-  // //console.log(volhistory);
-  // stroke(255);
-  //
-  // beginShape();
-  // noFill();
-  // //for(var i = 0; i<volhistory.length; i++){ //  for(var i = 0; i<volhistory.length; i++){
-  // var y = map(vol,0,1,height,0)
-  //   vertex(50,y);
-  // endShape();
-
-  // if(volhistory.length > (width-50)){
-  //   volhistory.splice(0,1);
-  //}
-  // Draw an ellipse with height based on volume
-  //var h = map(vol, 0, 0.5, height, 0);
-  //ellipse(width/2, h - 25, 50, 50);
 
 }
 
@@ -128,11 +119,55 @@ function drawAmphistory(){
 }
 
 function recordData(){
-  let noise = level.getLevel();
+  noise = level.getLevel();
   if (noise > Silence) {
     data.push(noise);
     console.log(noise);
+    analyzed = false;
   }
+  else if (analyzed === false) {
+    analyzeNoise();
+    analyzed = true;
+  }
+}
+
+function canTrans(){//************
+    trans = false;
+    if (binOut.length % 8 === 0) {//************
+        trans = true;//************
+    }
+    return trans;//************
+}
+
+function getText(){
+  let word = "";
+  for (let i =0; i < binOut.length; i+=8){
+    let str = binOut.substring(i, i+8);
+    let num = unbinary(str);
+    word += char(num);
+  }
+  return word;
+}
+
+function analyzeNoise(){
+  if (listening){
+    for (var i = 0; i < data.length; i=0) {
+      total += data[i];
+      console.log(total)
+      data.remove(i);
+    }
+    print("total:" + total)
+  }
+  if (total > 4.7){
+    binOut+= "0";
+    print(0);
+  }
+
+  if (2.5 < total && total < 4.7){
+    binOut+= "1";
+    print(1);
+  }
+  total = 0
 }
 
 // function keyPressed(e) {
