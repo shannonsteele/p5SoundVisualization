@@ -154,7 +154,7 @@ function analyzeNoise(){
     for (var i = 0; i < data.length; i=0) {
       total += data[i];
       console.log(total)
-      data.remove(i);
+      data.shift(i);
     }
     print("total:" + total)
   }
