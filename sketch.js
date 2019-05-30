@@ -14,8 +14,13 @@ let trans = false;
 let binOut = "";
 let total = 0.0;
 let noise = null;
-let color = 225;
-let gui;
+
+//GUI
+// let myColor = '#FFFFFF';
+// let visible = true;
+// let guivar;
+
+
 // function preload() {
 //   //song = loadSound('underwater.mp3');
 //   }
@@ -44,10 +49,17 @@ function setup() {
   level = new p5.Amplitude();
   level.setInput(source);
 
-  gui = createGui('p5.gui');
-  gui.addGlobals('color');
-
+  // gui();
 }
+
+// function gui(){
+//   sliderRange(0,255,1)
+//   guivar = createGui('Visualizers');
+//   guivar.addGlobals('myColor','zoom');
+//
+//   noLoop();
+// }
+
 function toggleRecord(){
   if (listening) {
       listening = false;
@@ -79,7 +91,7 @@ function drawWaveForm() {
   // Extract the spectrum from the time domain
   const wave = fft.waveform(source)
   // Set the stroke color to white
-  stroke(color)
+  stroke(255);
   // Turn off fill
   noFill()
   // Start drawing a shape
@@ -165,16 +177,20 @@ function analyzeNoise(){
     }
     print("total:" + total)
   }
-  if (total > 4.7){
+  if (total < 1){
     binOut+= "0";
     print(0);
   }
 
-  if (2.5 < total && total < 4.7){
+  if (total > 1){
     binOut+= "1";
     print(1);
   }
   total = 0
+}
+
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
 }
 
 // function keyPressed(e) {
