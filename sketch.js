@@ -151,8 +151,18 @@ function recordData(){
 
 function canTrans(){//************
     trans = false;
-    if (binOut.length % 8 === 0) {//************
+    if (binOut.length % 8 === 0) {//make this second check
         trans = true;//************
+    }
+    else {
+      if (binOut.length > 8){ //Make this first check
+        binOut = binOut.replace(binOut.substring(0, 7),"")
+      }
+      while (binOut.length % 8 != 0) { //make this third check
+        binOut = '0'+ binOut //make every attempt at analyzation work without manipulating decimal value
+        print('padding' + binOut.length)
+      }
+      trans = true;
     }
     return trans;//************
 }
@@ -161,9 +171,10 @@ function getText(){
   let word = "";
   for (let i =0; i < binOut.length; i+=8){
     let str = binOut.substring(i, i+8);
-    let num = parseInt(str,2);
+    let num = parseInt(str,2)
+    print('num' + num)
     word += char(num);
-    print(word);
+    print('word'+ word);
   }
   return word;
 }
