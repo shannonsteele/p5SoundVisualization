@@ -14,6 +14,7 @@ let trans = false;
 let binOut = "";
 let total = 0.0;
 let noise = null;
+let circleFill = 'black';
 
 //GUI
 // let myColor = '#FFFFFF';
@@ -35,7 +36,7 @@ function setup() {
   source = new p5.AudioIn();
     // start the Audio Input.
  // By default, it does not .connect() (to the computer speakers)
-  button = createButton('record');
+  button = createButton('Record');
   fill(255);
   button.mousePressed(toggleRecord);
 
@@ -63,7 +64,6 @@ function setup() {
 function toggleRecord(){
   if (listening) {
       listening = false;
-      print("false?"+listening)
       source.stop();
       if(canTrans()){ //************
         print(getText());//************
@@ -73,7 +73,6 @@ function toggleRecord(){
   }
   else {
     listening = true;
-    print("true?"+listening)
     source.start();
   }
 }
@@ -109,7 +108,7 @@ function drawWaveForm() {
 function drawCircAmp(){
     stroke(255)
     let vol = level.getLevel();
-    noFill()
+    fill(circleFill);
     //beginShape()
       var y = map(vol,0,1,(height/2)-50,0)
       ellipse(width/2,height/2,y, y)
@@ -162,8 +161,9 @@ function getText(){
   let word = "";
   for (let i =0; i < binOut.length; i+=8){
     let str = binOut.substring(i, i+8);
-    let num = unbinary(str);
+    let num = parseInt(str,2);
     word += char(num);
+    print(word);
   }
   return word;
 }
@@ -180,11 +180,13 @@ function analyzeNoise(){
   if (total < 1){
     binOut+= "0";
     print(0);
+    circleFill = 'black';
   }
 
   if (total > 1){
     binOut+= "1";
     print(1);
+    circleFill = 'white';
   }
   total = 0
 }
