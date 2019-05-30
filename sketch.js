@@ -14,6 +14,8 @@ let trans = false;
 let binOut = "";
 let total = 0.0;
 let noise = null;
+let color = 225;
+let gui;
 // function preload() {
 //   //song = loadSound('underwater.mp3');
 //   }
@@ -41,6 +43,9 @@ function setup() {
 
   level = new p5.Amplitude();
   level.setInput(source);
+
+  gui = createGui('p5.gui');
+  gui.addGlobals('color');
 
 }
 function toggleRecord(){
@@ -74,7 +79,7 @@ function drawWaveForm() {
   // Extract the spectrum from the time domain
   const wave = fft.waveform(source)
   // Set the stroke color to white
-  stroke(255)
+  stroke(color)
   // Turn off fill
   noFill()
   // Start drawing a shape
