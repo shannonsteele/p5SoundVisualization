@@ -156,7 +156,7 @@ function canTrans(){//************
     }
     else {
       if (binOut.length > 8){ //Make this first check
-        binOut = binOut.replace(binOut.substring(0, 7),"")
+        binOut = binOut.replace(binOut.substring(0, binOut.length - 8),"")
       }
       while (binOut.length % 8 != 0) { //make this third check
         binOut = '0'+ binOut //make every attempt at analyzation work without manipulating decimal value
