@@ -87,10 +87,10 @@ function draw(){
   recordData();
   textSize(32);
   text(binOut,50,50);
-  fill('white');
+  fill('#FFFFFF');
   textSize(32);
   text(sentence,window.innerWidth - 200,50);
-  fill('white');
+  fill('#FFFFFF');
 
 }
 
