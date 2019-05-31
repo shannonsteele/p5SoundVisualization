@@ -15,6 +15,7 @@ let binOut = "";
 let total = 0.0;
 let noise = null;
 let circleFill = 'black';
+let sentence = "";
 
 //GUI
 // let myColor = '#FFFFFF';
@@ -26,9 +27,9 @@ let circleFill = 'black';
 //   //song = loadSound('underwater.mp3');
 //   }
 
- function touchStarted() {
-   getAudioContext().resume();
- }
+ //function touchStarted() {
+//   getAudioContext().resume();
+ //}
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
@@ -62,6 +63,7 @@ function setup() {
 // }
 
 function toggleRecord(){
+  getAudioContext().resume();
   if (listening) {
       listening = false;
       source.stop();
@@ -83,6 +85,12 @@ function draw(){
   drawCircAmp();
   drawAmphistory();
   recordData();
+  textSize(32);
+  text(binOut,50,50);
+  fill('white');
+  textSize(32);
+  text(sentence,window.innerWidth - 200,50);
+  fill('white');
 
 }
 
@@ -176,6 +184,7 @@ function getText(){
     word += char(num);
     print('word'+ word);
   }
+  sentence = sentence + word;
   return word;
 }
 
